@@ -1,0 +1,23 @@
+public class Fibonacci {
+
+    // Step counter variable
+    static int stepCount = 0;
+
+    // Recursive method to calculate Fibonacci
+    public static int fibonacci(int n) {
+        stepCount++; // Count each call as a step
+        if (n <= 1) {
+            return n;
+        }
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    public static void main(String[] args) {
+        int n = 10; // Example: Calculate Fibonacci for n = 10
+        stepCount = 0; // Reset step counter
+        int result = fibonacci(n);
+        
+        System.out.println("Fibonacci(" + n + ") = " + result);
+        System.out.println("Step count = " + stepCount);
+    }
+}
