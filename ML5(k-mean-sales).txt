@@ -1,0 +1,44 @@
+pip install pandas numpy matplotlib scikit-learn
+pip install --upgrade threadpoolctl
+
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+data = pd.read_csv(r"C:\Users\sanja\Downloads\sales_data_sample.csv", encoding='latin1')
+
+# Preprocess dataset (remove any non-numeric columns or handle missing data if needed)
+data = data.select_dtypes(include=[np.number]).dropna()
+
+# Normalize the data
+scaler = StandardScaler()
+data_scaled = scaler.fit_transform(data)
+
+# Elbow method to find optimal number of clusters
+wcss = []  # Within-cluster sum of squares
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, init='k-means++', max_iter=300, n_init=10, random_state=0)
+    kmeans.fit(data_scaled)
+    wcss.append(kmeans.inertia_)
+
+# Plot the elbow graph
+plt.plot(range(1, 11), wcss)
+plt.title('Elbow Method for Optimal Clusters')
+plt.xlabel('Number of Clusters')
+plt.ylabel('WCSS')
+plt.show()
+
+# Fit K-Means with the optimal number of clusters
+optimal_clusters = 3  # Based on the elbow graph
+kmeans = KMeans(n_clusters=optimal_clusters, init='k-means++', max_iter=300, n_init=10, random_state=0)
+y_kmeans = kmeans.fit_predict(data_scaled)
+
+# Visualize the clusters (if data is 2D or use PCA for dimensionality reduction)
+plt.scatter(data_scaled[:, 0], data_scaled[:, 1], c=y_kmeans, cmap='viridis')
+plt.title('K-Means Clustering')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.show()

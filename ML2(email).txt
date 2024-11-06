@@ -1,0 +1,39 @@
+
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
+
+df = pd.read_csv(r"C:\Users\sanja\Downloads\archive (10)\emails.csv")
+df
+
+df.fillna('')  # Replace missing values
+
+# Assuming 'label' is the target column and features are all others
+X = df.drop('Email No.', axis=1)  # Features
+y = df['Email No.']  # Target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+import numpy as np
+X_train = np.array(X_train)
+X_test = np.array(X_test)
+
+# KNN model
+knn = KNeighborsClassifier()
+knn.fit(X_train, y_train)
+knn_pred = knn.predict(X_test)
+
+# SVM model
+svm = SVC()
+svm.fit(X_train, y_train)
+svm_pred = svm.predict(X_test)
+
+from sklearn.metrics import classification_report
+# Evaluate models
+print("KNN Classification Report:")
+print(classification_report(y_test, knn_pred))
+
+print("SVM Classification Report:")
+print(classification_report(y_test, svm_pred))
